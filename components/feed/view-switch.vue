@@ -26,6 +26,7 @@
     @apply grid gap-[10px] grid-flow-col justify-center items-center;
     & > * {
       @apply text-[--gray-500];
+      transition: color 0.15s ease 0s;
     }
     // .switch__list
     &__list {

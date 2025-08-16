@@ -1,6 +1,8 @@
-import type { SiteKeys } from "~/feed/types";
+import type { TFeedKey } from "~/feed/types";
 
-export const isSiteKey = (data: unknown): data is SiteKeys => {
-  const res = data === "list" || data === "cell";
+export const isFeedKey = (data: unknown): data is TFeedKey => {
+  const res = (["all", "lenta.ru", "mos.ru"] as TFeedKey[]).includes(
+    data as TFeedKey
+  );
   return res;
 };

@@ -1,10 +1,14 @@
 <script setup lang="ts">
+  import TabsList from "~/components/feed/tabs-list.vue";
+  import ViewSwitch from "~/components/feed/view-switch.vue";
   import IconLoupe from "~/components/icons/icon-loupe.vue";
-  import IconRefresh from "~/components/icons/icon-refresh.vue";
   import UiInput from "~/components/ui/ui-input.vue";
+  import UiRefresh from "~/components/ui/ui-refresh.vue";
   import FeedApi from "~/feed/FeedApi";
   import { normalizeRss } from "~/feed/helpers/normalizeRss";
-  import type { TItemsMap } from "~/feed/types";
+  import type { TItemsMap, TTab } from "~/feed/types";
+
+  const { view } = storeToRefs(useFeedStore());
 
   const feedApi = new FeedApi();
   const promise = useAsyncData(
@@ -15,7 +19,7 @@
         const lentaItems = normalizeRss(rawLentaRss);
 
         const map: TItemsMap = {
-          "www.mos.ru": mosItems,
+          "mos.ru": mosItems,
           "lenta.ru": lentaItems,
         };
 
@@ -31,6 +35,12 @@
   const { data } = promise;
 
   const search = ref<string>("");
+  const tabsList: TTab[] = [
+    { name: "Всё", mark: "all" },
+    { name: "Lenta.ru", mark: "lenta.ru" },
+    { name: "Mos.ru", mark: "mos.ru" },
+  ];
+  const currentTabMark = ref<string>("all");
 
   onMounted(() => {
     console.log(data.value);
@@ -43,9 +53,7 @@
       <div class="page__header-top top-header">
         <div class="top-header__left">
           <h1 class="top-header__title">Список новостей</h1>
-          <button class="top-header__refresh">
-            <icon-refresh />
-          </button>
+          <ui-refresh class="top-header__refresh" />
         </div>
         <div class="top-header__right">
           <div class="top-header__search">
@@ -57,7 +65,14 @@
           </div>
         </div>
       </div>
-      <div class="page__header-bottom bottom-header"></div>
+      <div class="page__header-bottom bottom-header">
+        <tabs-list
+          class="bottom-header__tabs"
+          :tabs="tabsList"
+          :currentTabMark="currentTabMark"
+        />
+        <view-switch v-model="view" />
+      </div>
     </header>
     <div class="page__content">
       <div class="page__nested">

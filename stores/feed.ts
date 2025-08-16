@@ -16,11 +16,15 @@ export const useFeedStore = defineStore("feedStore", () => {
   const viewKey = "view-key";
 
   const saveView = (view: TView) => {
+    if (process.server) {
+      return;
+    }
+
     localStorage.setItem(viewKey, view);
   };
 
   const getView = (): TView => {
-    const view = localStorage.getItem(viewKey);
+    const view = process.client ? localStorage.getItem(viewKey) : null;
     if (view && (view === "list" || view === "cell")) {
       return view;
     }

@@ -25,13 +25,13 @@ export type TRawItem = {
 
 export type TRawRss = Awaited<ReturnType<typeof parse>>;
 
-export type SiteKeys = "www.mos.ru" | "lenta.ru";
-export type TItemsMap = Record<SiteKeys, TItem[]>;
+export type TFeedKey = "all" | "mos.ru" | "lenta.ru";
+export type TItemsMap = Record<Exclude<TFeedKey, "all">, TItem[]>;
 export type TView = "list" | "cell";
 
 export type TTab = {
   name: string;
-  mark: string;
+  mark: TFeedKey;
 };
 
 export interface IFeedApi {
