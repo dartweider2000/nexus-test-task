@@ -38,14 +38,18 @@
 
 <style scoped lang="scss">
   .tabs {
-    @apply grid overflow-hidden;
+    @apply grid overflow-hidden justify-start;
     // .tabs__inner
     &__inner {
       @apply grid grid-flow-col gap-[16px] items-center overflow-x-auto;
     }
     // .tabs__item
     &__item {
-      @apply whitespace-nowrap;
+      @apply whitespace-nowrap text-[--blue] font-bold;
+
+      &.is-active {
+        @apply text-[--black] cursor-default;
+      }
     }
   }
 </style>

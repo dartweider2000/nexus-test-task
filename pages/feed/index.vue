@@ -35,7 +35,7 @@
   const { data } = promise;
 
   const search = ref<string>("");
-  const tabsList: TTab[] = [
+  const tabs: TTab[] = [
     { name: "Всё", mark: "all" },
     { name: "Lenta.ru", mark: "lenta.ru" },
     { name: "Mos.ru", mark: "mos.ru" },
@@ -69,7 +69,7 @@
         <div class="page__header-bottom bottom-header">
           <tabs-list
             class="bottom-header__tabs"
-            :tabs="tabsList"
+            :tabs="tabs"
             :currentTabMark="currentTabMark"
           />
           <view-switch v-model="view" class="bottom-header__switch" />
@@ -98,6 +98,7 @@
     }
     // .page__header-top
     &__header-top {
+      @apply py-[36px] border-b-[1px] border-[--gray-300] border-solid;
     }
     // .page__header-bottom
     &__header-bottom {
@@ -116,14 +117,18 @@
     }
   }
   .container {
-    @apply max-w-[--container-width] px-[--container-padding] m-auto;
+    @apply max-w-[--container-width] px-[--container-padding-x] m-auto;
   }
   .top-header {
+    @apply grid grid-cols-[1fr,auto] gap-[10px] items-center;
     // .top-header__left
     &__left {
+      @apply grid grid-flow-col justify-start gap-[30px] items-center;
     }
     // .top-header__title
     &__title {
+      @apply text-[--black] leading-[0] font-bold;
+      font-size: 36px;
     }
     // .top-header__refresh
     &__refresh {
@@ -140,6 +145,7 @@
     }
   }
   .bottom-header {
+    @apply py-[25px] grid grid-flow-col justify-between items-center;
     // .bottom-header__tabs
     &__tabs {
     }
