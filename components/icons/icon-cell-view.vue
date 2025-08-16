@@ -1,0 +1,18 @@
+<script setup lang="ts"></script>
+
+<template>
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect width="8" height="8" fill="currentColor" />
+    <rect y="10" width="8" height="8" fill="currentColor" />
+    <rect x="10" width="8" height="8" fill="currentColor" />
+    <rect x="10" y="10" width="8" height="8" fill="currentColor" />
+  </svg>
+</template>
+
+<style scoped lang="scss"></style>
