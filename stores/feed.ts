@@ -1,5 +1,3 @@
 import { defineStore } from "pinia";
 
-export const useFeedStore = defineStore("feedStore", () => {
-  
-});
+export const useFeedStore = defineStore("feedStore", () => {});
