@@ -27,6 +27,7 @@ export type TRawRss = Awaited<ReturnType<typeof parse>>;
 
 export type SiteKeys = "www.mos.ru" | "lenta.ru";
 export type TItemsMap = Record<SiteKeys, TItem[]>;
+export type TView = "list" | "cell";
 
 export interface IFeedApi {
   getMosRuRss(): Promise<TRawRss>;
