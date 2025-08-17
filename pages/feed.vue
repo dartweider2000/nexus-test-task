@@ -10,7 +10,9 @@
   import FeedApi from "~/feed/FeedApi";
   import { normalizeRss } from "~/feed/helpers/normalizeRss";
   import type { TFeedKey, TItem, TItemsMap, TTab } from "~/feed/types";
+  import { usePagination } from "~/feed/usePagination";
   import { useUrlParams } from "~/feed/useUrlParams";
+  import { debounce } from "~/helpers/debounce";
 
   const { view } = storeToRefs(useFeedStore());
 
@@ -55,13 +57,26 @@
   if (process.server) {
     await promise;
   }
-  const { data, pending } = promise;
+  const { data: map, pending, refresh } = promise;
 
   const { page, q, tab } = useUrlParams();
 
-  const totalPages = computed(() =>
-    Math.ceil((data.value?.[tab.value].length || 1) / 4)
-  );
+  const search = ref<string>(q.value);
+  const updateQ = debounce(() => {
+    search.value = q.value;
+  }, 400);
+  watch(q, updateQ);
+
+  const reset = () => {
+    page.value = 1;
+    q.value = "";
+    tab.value = "all";
+    search.value = "";
+    refresh();
+  };
+
+  const { totalPages, viewList } = usePagination(map, tab, page, search);
+
   const changePageHandler = (_page: number) => {
     page.value = _page;
   };
@@ -74,10 +89,6 @@
   const changeTabMark = (mark: TFeedKey) => {
     tab.value = mark;
   };
-
-  onMounted(() => {
-    console.log(data.value);
-  });
 </script>
 
 <template>
@@ -87,7 +98,7 @@
         <div class="page__header-top top-header">
           <div class="top-header__left">
             <h1 class="top-header__title">Список новостей</h1>
-            <ui-refresh class="top-header__refresh" />
+            <ui-refresh class="top-header__refresh" @refresh="reset" />
           </div>
           <div class="top-header__right">
             <div class="top-header__search">
@@ -122,8 +133,8 @@
         <div class="page__nested">
           <client-only>
             <template #default>
-              <feed-skeleton v-if="pending || !data" />
-              <nuxt-page v-else :items="data[tab].slice(0, 4)" />
+              <feed-skeleton v-if="pending || !map" />
+              <nuxt-page v-else :items="viewList" />
             </template>
             <template #fallback>
               <feed-skeleton />

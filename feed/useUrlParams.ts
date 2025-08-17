@@ -43,7 +43,7 @@ export const useUrlParams = () => {
       const { page } = params;
       const { tab, q } = query;
 
-      if (/^\d+$/.test(page.toString())) {
+      if (/^\d+$/.test(page.toString()) && +page > 0) {
         _page.value = +page;
       }
 
