@@ -5,17 +5,9 @@
 
   const view = defineModel<TView>({ required: true });
 
-  watch(view, () => {
-    console.log(view, "In switch");
-  });
-
   const setView = (newView: TView) => {
     view.value = newView;
   };
-
-  onMounted(() => {
-    console.log("Switch", localStorage.getItem("view-key"));
-  });
 </script>
 
 <template>

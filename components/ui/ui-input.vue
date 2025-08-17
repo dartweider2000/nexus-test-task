@@ -58,7 +58,7 @@
     }
     // .ui-input__inner
     &__inner {
-      @apply min-w-0 outline-none;
+      @apply min-w-0 outline-none w-full;
     }
     // .ui-input__postfix
     &__postfix {

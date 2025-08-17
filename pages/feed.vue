@@ -4,6 +4,7 @@
   import ViewSwitchSkeleton from "~/components/feed/view-switch-skeleton.vue";
   import ViewSwitch from "~/components/feed/view-switch.vue";
   import IconLoupe from "~/components/icons/icon-loupe.vue";
+  import PaginationSkeleton from "~/components/ui/pagination/pagination-skeleton.vue";
   import UiPagination from "~/components/ui/pagination/ui-pagination.vue";
   import UiInput from "~/components/ui/ui-input.vue";
   import UiRefresh from "~/components/ui/ui-refresh.vue";
@@ -146,7 +147,9 @@
     <div class="page__pagination">
       <div class="container">
         <div class="page__pagination-inner">
+          <pagination-skeleton v-if="pending" />
           <ui-pagination
+            v-else
             :total="totalPages"
             :current="page"
             @change="changePageHandler"
@@ -232,7 +235,12 @@
     }
   }
   .bottom-header {
-    @apply py-[25px] grid grid-flow-col justify-between items-center;
+    @apply py-[20px] grid grid-flow-col justify-between items-center;
+
+    @media (min-width: 769px) {
+      @apply py-[25px];
+    }
+
     // .bottom-header__tabs
     &__tabs {
     }
