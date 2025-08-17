@@ -46,7 +46,10 @@
 
 <style scoped lang="scss">
   .ui-input {
-    @apply inline-grid grid-flow-col items-center justify-center px-[13px] py-[10px] rounded-[4px] bg-[--white] shadow leading-[1];
+    @apply inline-grid grid-flow-col grid-cols-[1fr] items-center px-[13px] py-[10px] rounded-[4px] bg-[--white] shadow leading-[1];
+    &.is-postfix {
+      @apply grid-cols-[1fr,auto];
+    }
     // .ui-input__input-wrapper
     &__input-wrapper {
       .is-postfix & {

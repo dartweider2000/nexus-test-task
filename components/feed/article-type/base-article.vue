@@ -43,11 +43,11 @@
     }
   }
   .footer {
-    @apply py-[4px] px-[30px] grid grid-flow-col justify-between items-center text-[--gray-400] bg-[--gray-200] rounded-[3px];
+    @apply py-[4px] px-[22px] grid grid-flow-col justify-between items-center text-[--gray-400] bg-[--gray-200] rounded-[3px];
     font-size: 14px;
 
-    @media (max-width: 768px) {
-      @apply px-[22px];
+    @media (min-width: 769px) {
+      @apply px-[30px];
     }
     // .footer__site
     &__site {

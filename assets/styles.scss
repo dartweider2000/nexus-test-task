@@ -12,8 +12,8 @@
   --black: black;
   --white: white;
 
-  --container-width: 1080px;
-  --container-padding-x: 10px;
+  --container-padding-x: 23px;
+  --container-width: calc(1060px + var(--container-padding-x) * 2);
 }
 
 * {

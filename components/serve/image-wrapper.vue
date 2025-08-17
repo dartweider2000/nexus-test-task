@@ -33,7 +33,7 @@
   .image {
     @apply relative;
     & > img {
-      @apply max-w-full;
+      @apply max-w-full w-full;
     }
     // .image__skeleton
     &__skeleton {

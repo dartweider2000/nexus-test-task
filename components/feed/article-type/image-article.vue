@@ -16,12 +16,16 @@
     <template #content>
       <div class="content">
         <a :href="article.articleUrl" target="_blank" class="content__image">
-          <!-- <img :src="article.imageSrc" alt="image" /> -->
           <image-wrapper :src="article.imageSrc!" />
         </a>
         <div class="content__body">
           <div class="content__title">{{ article.title }}</div>
-          <div class="content__description">{{ article.description }}</div>
+          <div v-if="article.description" class="content__description">
+            {{ article.description }}
+          </div>
+          <a :href="article.articleUrl" target="_blank" class="content__link"
+            >Подробнее</a
+          >
         </div>
       </div>
     </template>
@@ -30,12 +34,16 @@
 
 <style scoped lang="scss">
   .content {
-    @apply grid grid-cols-[200px,1fr] p-[30px] gap-[30px];
+    @apply grid px-[22px] pt-[20px] py-[15px] gap-[30px];
+    @media (min-width: 769px) {
+      @apply grid-cols-[200px,1fr] p-[30px];
+    }
+
     // .content__image
     &__image {
-      @apply w-[200px] h-[100px] overflow-hidden grid;
-      & > * {
-        @apply w-full h-full;
+      @apply overflow-hidden grid w-full aspect-[600/400];
+      @media (min-width: 769px) {
+        @apply w-[200px] h-[100px] aspect-auto;
       }
     }
     // .content__body
@@ -51,6 +59,14 @@
     &__description {
       @apply text-[--black] leading-[20px];
       font-size: 14px;
+    }
+    // .content__link
+    &__link {
+      @apply text-[14px] text-[--blue] underline justify-self-start;
+
+      @media (min-width: 769px) {
+        @apply hidden;
+      }
     }
   }
 </style>

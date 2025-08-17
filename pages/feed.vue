@@ -118,7 +118,7 @@
           <client-only>
             <template #default>
               <feed-skeleton v-if="pending" />
-              <nuxt-page v-else :items="data?.['lenta.ru']!.slice(0, 4)" />
+              <nuxt-page v-else :items="data?.['all']!.slice(0, 4)" />
             </template>
             <template #fallback>
               <feed-skeleton />
@@ -149,7 +149,10 @@
     }
     // .page__header-top
     &__header-top {
-      @apply py-[36px] border-b-[1px] border-[--gray-300] border-solid;
+      @apply py-[25px] border-b-[1px] border-[--gray-300] border-solid;
+      @media (min-width: 769px) {
+        @apply py-[36px];
+      }
     }
     // .page__header-bottom
     &__header-bottom {
@@ -165,7 +168,7 @@
     }
     // .page__pagination
     &__pagination {
-      @apply pb-[124px];
+      @apply pb-[124px] pt-[50px];
     }
     // .page__pagination-inner
     &__pagination-inner {
@@ -176,15 +179,26 @@
     @apply max-w-[--container-width] px-[--container-padding-x] m-auto;
   }
   .top-header {
-    @apply grid grid-cols-[1fr,auto] gap-[10px] items-center;
+    @apply grid gap-[20px] items-center;
+
+    @media (min-width: 769px) {
+      @apply grid-cols-[1fr,auto];
+    }
     // .top-header__left
     &__left {
-      @apply grid grid-flow-col justify-start gap-[30px] items-center;
+      @apply grid grid-cols-[1fr,auto] gap-[30px] items-center;
+
+      @media (min-width: 769px) {
+        @apply grid-cols-[auto,auto] justify-start;
+      }
     }
     // .top-header__title
     &__title {
-      @apply text-[--black] leading-[0] font-bold;
-      font-size: 36px;
+      @apply text-[--black] text-[24px] leading-[100%] font-bold;
+
+      @media (min-width: 769px) {
+        @apply text-[36px];
+      }
     }
     // .top-header__refresh
     &__refresh {
@@ -194,6 +208,7 @@
     }
     // .top-header__search
     &__search {
+      @apply grid;
     }
     // .top-header__search-icon
     &__search-icon {
