@@ -6,7 +6,7 @@
   import UiRefresh from "~/components/ui/ui-refresh.vue";
   import FeedApi from "~/feed/FeedApi";
   import { normalizeRss } from "~/feed/helpers/normalizeRss";
-  import type { TItemsMap, TTab } from "~/feed/types";
+  import type { TItem, TItemsMap, TTab } from "~/feed/types";
 
   const { view } = storeToRefs(useFeedStore());
 
@@ -18,9 +18,28 @@
         const mosItems = normalizeRss(rawMosRss);
         const lentaItems = normalizeRss(rawLentaRss);
 
+        const allItems: TItem[] = [];
+        let i = 0,
+          k = 0;
+        while (mosItems.length < i && lentaItems.length < k) {
+          if (mosItems[i].timestamp > lentaItems[k].timestamp) {
+            allItems.push(mosItems[i]);
+            i++;
+          } else {
+            allItems.push(lentaItems[k]);
+            k++;
+          }
+        }
+        if (mosItems.length >= i) {
+          allItems.push(...lentaItems.slice(k));
+        } else if (lentaItems.length >= k) {
+          allItems.push(...mosItems.slice(i));
+        }
+
         const map: TItemsMap = {
           "mos.ru": mosItems,
           "lenta.ru": lentaItems,
+          all: allItems,
         };
 
         return map;

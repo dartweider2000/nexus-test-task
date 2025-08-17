@@ -26,7 +26,7 @@ export type TRawItem = {
 export type TRawRss = Awaited<ReturnType<typeof parse>>;
 
 export type TFeedKey = "all" | "mos.ru" | "lenta.ru";
-export type TItemsMap = Record<Exclude<TFeedKey, "all">, TItem[]>;
+export type TItemsMap = Record<TFeedKey, TItem[]>;
 export type TView = "list" | "cell";
 
 export type TTab = {
