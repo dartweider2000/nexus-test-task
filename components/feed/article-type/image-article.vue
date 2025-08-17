@@ -52,13 +52,21 @@
     }
     // .content__title
     &__title {
-      @apply text-[--blue] font-bold leading-[22px];
+      @apply text-[--blue] font-bold leading-[22px] text-ellipsis overflow-hidden;
       font-size: 18px;
+
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
     // .content__description
     &__description {
-      @apply text-[--black] leading-[20px];
+      @apply text-[--black] leading-[20px] text-ellipsis overflow-hidden;
       font-size: 14px;
+
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
     // .content__link
     &__link {

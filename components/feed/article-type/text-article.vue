@@ -43,12 +43,20 @@
     }
     // .content__title
     &__title {
-      @apply text-[--blue] font-bold;
+      @apply text-[--blue] font-bold text-ellipsis overflow-hidden;
       font-size: 18px;
+
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
     // .content__description
     &__description {
-      @apply mt-[25px] text-[14px];
+      @apply mt-[25px] text-[14px] text-ellipsis overflow-hidden;
+
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
     // .content__link
     &__link {

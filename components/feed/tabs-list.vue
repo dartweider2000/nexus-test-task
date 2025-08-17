@@ -1,16 +1,16 @@
 <script setup lang="ts">
-  import type { TTab } from "~/feed/types";
+  import type { TFeedKey, TTab } from "~/feed/types";
 
   const props = defineProps<{
     tabs: TTab[];
-    currentTabMark: string;
+    currentTabMark: TFeedKey;
   }>();
 
   const emit = defineEmits<{
-    change: [mark: string];
+    change: [mark: TFeedKey];
   }>();
 
-  const itemClickHandler = (mark: string) => {
+  const itemClickHandler = (mark: TFeedKey) => {
     // Если одинаковые значения, то не надо эмитить изменение
     if (props.currentTabMark === mark) {
       return;

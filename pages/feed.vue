@@ -9,7 +9,8 @@
   import UiRefresh from "~/components/ui/ui-refresh.vue";
   import FeedApi from "~/feed/FeedApi";
   import { normalizeRss } from "~/feed/helpers/normalizeRss";
-  import type { TItem, TItemsMap, TTab } from "~/feed/types";
+  import type { TFeedKey, TItem, TItemsMap, TTab } from "~/feed/types";
+  import { useUrlParams } from "~/feed/useUrlParams";
 
   const { view } = storeToRefs(useFeedStore());
 
@@ -24,7 +25,8 @@
         const allItems: TItem[] = [];
         let i = 0,
           k = 0;
-        while (mosItems.length < i && lentaItems.length < k) {
+
+        while (mosItems.length > i && lentaItems.length > k) {
           if (mosItems[i].timestamp > lentaItems[k].timestamp) {
             allItems.push(mosItems[i]);
             i++;
@@ -53,22 +55,24 @@
   if (process.server) {
     await promise;
   }
-
   const { data, pending } = promise;
 
-  const search = ref<string>("");
+  const { page, q, tab } = useUrlParams();
+
+  const totalPages = computed(() =>
+    Math.ceil((data.value?.[tab.value].length || 1) / 4)
+  );
+  const changePageHandler = (_page: number) => {
+    page.value = _page;
+  };
+
   const tabs: TTab[] = [
     { name: "Всё", mark: "all" },
     { name: "Lenta.ru", mark: "lenta.ru" },
     { name: "Mos.ru", mark: "mos.ru" },
   ];
-  const currentTabMark = ref<string>("all");
-
-  const currentPage = ref<number>(1);
-  const totalPages = 200;
-
-  const changePageHandler = (page: number) => {
-    currentPage.value = page;
+  const changeTabMark = (mark: TFeedKey) => {
+    tab.value = mark;
   };
 
   onMounted(() => {
@@ -87,7 +91,7 @@
           </div>
           <div class="top-header__right">
             <div class="top-header__search">
-              <ui-input v-model="search">
+              <ui-input v-model="q">
                 <template #postfix>
                   <icon-loupe class="top-header__search-icon" />
                 </template>
@@ -99,7 +103,8 @@
           <tabs-list
             class="bottom-header__tabs"
             :tabs="tabs"
-            :currentTabMark="currentTabMark"
+            :currentTabMark="tab"
+            @change="changeTabMark"
           />
           <client-only>
             <template #default>
@@ -117,8 +122,8 @@
         <div class="page__nested">
           <client-only>
             <template #default>
-              <feed-skeleton v-if="pending" />
-              <nuxt-page v-else :items="data?.['all']!.slice(0, 4)" />
+              <feed-skeleton v-if="pending || !data" />
+              <nuxt-page v-else :items="data[tab].slice(0, 4)" />
             </template>
             <template #fallback>
               <feed-skeleton />
@@ -132,7 +137,7 @@
         <div class="page__pagination-inner">
           <ui-pagination
             :total="totalPages"
-            :current="currentPage"
+            :current="page"
             @change="changePageHandler"
           />
         </div>
