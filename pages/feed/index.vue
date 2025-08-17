@@ -42,13 +42,15 @@
   ];
   const currentTabMark = ref<string>("all");
 
+  const isClient = import.meta.client;
+
   onMounted(() => {
     console.log(data.value);
   });
 </script>
 
 <template>
-  <div class="page">
+  <div class="page" data-allow-mismatch>
     <header class="page__header">
       <div class="container">
         <div class="page__header-top top-header">
@@ -72,7 +74,14 @@
             :tabs="tabs"
             :currentTabMark="currentTabMark"
           />
-          <view-switch v-model="view" class="bottom-header__switch" />
+          <client-only>
+            <template #default>
+              <view-switch v-model="view" class="bottom-header__switch" />
+            </template>
+            <template #fallback>
+              <div>Скелетон</div>
+            </template>
+          </client-only>
         </div>
       </div>
     </header>
@@ -148,6 +157,9 @@
     @apply py-[25px] grid grid-flow-col justify-between items-center;
     // .bottom-header__tabs
     &__tabs {
+    }
+    // .bottom-header__switch-wrapper
+    &__switch-wrapper {
     }
     // .bottom-header__switch
     &__switch {
