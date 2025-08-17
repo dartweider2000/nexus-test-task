@@ -2,6 +2,7 @@
   import TabsList from "~/components/feed/tabs-list.vue";
   import ViewSwitch from "~/components/feed/view-switch.vue";
   import IconLoupe from "~/components/icons/icon-loupe.vue";
+  import UiPagination from "~/components/ui/pagination/ui-pagination.vue";
   import UiInput from "~/components/ui/ui-input.vue";
   import UiRefresh from "~/components/ui/ui-refresh.vue";
   import FeedApi from "~/feed/FeedApi";
@@ -61,7 +62,12 @@
   ];
   const currentTabMark = ref<string>("all");
 
-  const isClient = import.meta.client;
+  const currentPage = ref<number>(1);
+  const totalPages = 200;
+
+  const changePageHandler = (page: number) => {
+    currentPage.value = page;
+  };
 
   onMounted(() => {
     console.log(data.value);
@@ -113,14 +119,22 @@
       </div>
     </div>
     <div class="page__pagination">
-      <div class="container"></div>
+      <div class="container">
+        <div class="page__pagination-inner">
+          <ui-pagination
+            :total="totalPages"
+            :current="currentPage"
+            @change="changePageHandler"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
   .page {
-    @apply bg-[--gray-100] min-h-dvh;
+    @apply grid grid-rows-[auto,1fr,auto] bg-[--gray-100] min-h-dvh;
     // .page__header
     &__header {
     }
@@ -142,6 +156,11 @@
     }
     // .page__pagination
     &__pagination {
+      @apply pb-[124px];
+    }
+    // .page__pagination-inner
+    &__pagination-inner {
+      @apply grid justify-center;
     }
   }
   .container {
@@ -176,9 +195,6 @@
     @apply py-[25px] grid grid-flow-col justify-between items-center;
     // .bottom-header__tabs
     &__tabs {
-    }
-    // .bottom-header__switch-wrapper
-    &__switch-wrapper {
     }
     // .bottom-header__switch
     &__switch {
