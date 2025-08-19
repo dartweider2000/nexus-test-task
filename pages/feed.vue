@@ -8,92 +8,91 @@
   import UiPagination from "~/components/ui/pagination/ui-pagination.vue";
   import UiInput from "~/components/ui/ui-input.vue";
   import UiRefresh from "~/components/ui/ui-refresh.vue";
+  import { tabs } from "~/feed/config";
   import FeedApi from "~/feed/FeedApi";
-  import { normalizeRss } from "~/feed/helpers/normalizeRss";
-  import type { TFeedKey, TItem, TItemsMap, TTab } from "~/feed/types";
-  import { usePagination } from "~/feed/usePagination";
+  import type {
+    TFeedKey,
+    TPaginationBackendResponse,
+    TPaginationParams,
+  } from "~/feed/types";
   import { useUrlParams } from "~/feed/useUrlParams";
   import { debounce } from "~/helpers/debounce";
 
   const { view } = storeToRefs(useFeedStore());
 
-  const feedApi = new FeedApi();
-  const {
-    data: map,
-    pending,
-    refresh,
-  } = await useAsyncData(
-    async () => Promise.all([feedApi.getMosRuRss(), feedApi.getLentaRuRss()]),
-    {
-      transform: ([rawMosRss, rawLentaRss]): TItemsMap => {
-        const mosItems = normalizeRss(rawMosRss);
-        const lentaItems = normalizeRss(rawLentaRss);
-
-        const allItems: TItem[] = [];
-        let i = 0,
-          k = 0;
-
-        while (mosItems.length > i && lentaItems.length > k) {
-          if (mosItems[i].timestamp > lentaItems[k].timestamp) {
-            allItems.push(mosItems[i]);
-            i++;
-          } else {
-            allItems.push(lentaItems[k]);
-            k++;
-          }
-        }
-        if (mosItems.length >= i) {
-          allItems.push(...lentaItems.slice(k));
-        } else if (lentaItems.length >= k) {
-          allItems.push(...mosItems.slice(i));
-        }
-
-        const map: TItemsMap = {
-          "mos.ru": mosItems,
-          "lenta.ru": lentaItems,
-          all: allItems,
-        };
-
-        return map;
-      },
-      lazy: true,
-    }
-  );
-
   const { page, q, tab } = useUrlParams();
+  const changePageHandler = (_page: number) => {
+    page.value = _page;
+  };
+  const changeTabMark = (mark: TFeedKey) => {
+    tab.value = mark;
+  };
 
   const search = ref<string>(q.value);
   const updateQ = debounce(() => {
     search.value = q.value;
+    // debouncedRefresh();
   }, 400);
   watch(q, updateQ);
+
+  // При вереходе между лентами и когда изменяем значение в поиске, то сбрасываем страницу
+  watch([tab, search], () => {
+    page.value = 1;
+    debouncedRefresh();
+  });
+
+  let shouldLoadNewItems: boolean = false;
+
+  const feedApi = new FeedApi();
+  const {
+    data: response,
+    pending,
+    refresh,
+  } = await useAsyncData<TPaginationBackendResponse>(
+    async () => {
+      const params: TPaginationParams = {
+        page: page.value,
+        q: search.value,
+        mark: tab.value,
+      };
+
+      // Указываем брать значение из кэша или запросить новое
+      if (shouldLoadNewItems) {
+        shouldLoadNewItems = false;
+
+        params.refresh = 1;
+      }
+
+      return await feedApi.getRss(params);
+    },
+    {
+      lazy: true,
+    }
+  );
+
+  const debouncedRefresh = debounce(refresh, 50);
+  // subscribeUrlUpdate(debouncedRefresh);
+
+  // Проверка на то не выходил ли значение page за пределы totalPages
+  watch(page, (value) => {
+    if (response.value && response.value.totalPages < value) {
+      page.value = response.value.totalPages;
+    } else {
+      debouncedRefresh();
+    }
+  });
 
   const reset = () => {
     page.value = 1;
     q.value = "";
     tab.value = "all";
     search.value = "";
-    refresh();
-  };
-
-  const { totalPages, viewList } = usePagination(map, tab, page, search);
-
-  const changePageHandler = (_page: number) => {
-    page.value = _page;
-  };
-
-  const tabs: TTab[] = [
-    { name: "Всё", mark: "all" },
-    { name: "Lenta.ru", mark: "lenta.ru" },
-    { name: "Mos.ru", mark: "mos.ru" },
-  ];
-  const changeTabMark = (mark: TFeedKey) => {
-    tab.value = mark;
+    shouldLoadNewItems = true;
   };
 </script>
 
 <template>
-  <div class="page" data-allow-mismatch>
+  <div class="page">
     <header class="page__header">
       <div class="container">
         <div class="page__header-top top-header">
@@ -134,8 +133,8 @@
         <div class="page__nested">
           <client-only>
             <template #default>
-              <feed-skeleton v-if="pending || !map" />
-              <nuxt-page v-else :items="viewList" />
+              <feed-skeleton v-if="pending || !response" />
+              <nuxt-page v-else :items="response.items" />
             </template>
             <template #fallback>
               <feed-skeleton />
@@ -147,10 +146,10 @@
     <div class="page__pagination">
       <div class="container">
         <div class="page__pagination-inner">
-          <pagination-skeleton v-if="pending" />
+          <pagination-skeleton v-if="pending || !response" />
           <ui-pagination
             v-else
-            :total="totalPages"
+            :total="response.totalPages"
             :current="page"
             @change="changePageHandler"
           />

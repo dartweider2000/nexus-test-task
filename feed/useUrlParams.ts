@@ -1,5 +1,5 @@
-import { isFeedKey } from "./typeGuards";
-import type { TFeedKey } from "./types";
+import { isFeedKey } from "~/feed/typeGuards";
+import type { TFeedKey } from "~/feed/types";
 
 export const useUrlParams = () => {
   const router = useRouter();
@@ -37,23 +37,42 @@ export const useUrlParams = () => {
     },
   });
 
+  // const subscribers: (() => Promise<void> | void)[] = [];
+  // const subscribeUrlUpdate = (callback: () => Promise<void> | void) => {
+  //   subscribers.push(callback);
+  // };
+  // const notify = () => {
+  //   subscribers.forEach((callback) => callback());
+  // };
+
   watch(
     () => router.currentRoute.value,
     ({ query, params }) => {
       const { page } = params;
       const { tab, q } = query;
 
-      if (/^\d+$/.test(page.toString()) && +page > 0) {
+      let changed = false;
+
+      if (/^\d+$/.test(page.toString()) && +page > 0 && +page !== _page.value) {
         _page.value = +page;
+        changed = true;
       }
 
-      if (isFeedKey(tab)) {
+      if (isFeedKey(tab) && tab !== _tab.value) {
         _tab.value = tab;
+        changed = true;
       }
 
-      _q.value = q?.toString() || "";
+      if (q !== _q.value) {
+        _q.value = q?.toString() || "";
+        changed = true;
+      }
 
-      setParams(_page.value, _q.value, _tab.value);
+      if (changed) {
+        setParams(_page.value, _q.value, _tab.value);
+      }
+
+      // notify();
     },
     { immediate: true }
   );
@@ -62,5 +81,6 @@ export const useUrlParams = () => {
     q,
     page,
     tab,
+    // subscribeUrlUpdate,
   };
 };
