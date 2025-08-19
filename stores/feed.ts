@@ -1,19 +1,19 @@
 import { defineStore } from "pinia";
+import { feedViewKey } from "~/feed/config";
+import { isFeedView } from "~/feed/typeGuards";
 import type { TView } from "~/feed/types";
 
 export const useFeedStore = defineStore("feedStore", () => {
-  const viewKey = "view-key";
   const saveView = (view: TView) => {
-    localStorage.setItem(viewKey, view);
+    localStorage.setItem(feedViewKey, view);
   };
   const getView = (): TView => {
-    const _view = localStorage.getItem(viewKey);
-    if (_view && (_view === "list" || _view === "cell")) {
+    const _view = localStorage.getItem(feedViewKey);
+    if (_view && isFeedView(_view)) {
       return _view;
     }
 
-    const newView: TView = "list";
-    return newView;
+    return "list";
   };
 
   const view = ref<TView>("list");
