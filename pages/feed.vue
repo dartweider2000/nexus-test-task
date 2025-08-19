@@ -18,7 +18,11 @@
   const { view } = storeToRefs(useFeedStore());
 
   const feedApi = new FeedApi();
-  const promise = useAsyncData(
+  const {
+    data: map,
+    pending,
+    refresh,
+  } = await useAsyncData(
     async () => Promise.all([feedApi.getMosRuRss(), feedApi.getLentaRuRss()]),
     {
       transform: ([rawMosRss, rawLentaRss]): TItemsMap => {
@@ -52,13 +56,9 @@
 
         return map;
       },
+      lazy: true,
     }
   );
-
-  if (process.server) {
-    await promise;
-  }
-  const { data: map, pending, refresh } = promise;
 
   const { page, q, tab } = useUrlParams();
 
