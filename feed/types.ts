@@ -41,6 +41,9 @@ export type TFeedData = {
   mark: TFeedKey;
 };
 
+export type TServerCacheData = { items: TItem[]; expired: number };
+export type TServerCache = Partial<Record<TFeedKey, TServerCacheData>>;
+
 export type TPaginationParams = {
   page: number;
   q: string;
