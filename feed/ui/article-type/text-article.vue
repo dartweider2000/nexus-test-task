@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import BaseArticle from "~/components/feed/article-type/base-article.vue";
+  import BaseArticle from "~/feed/ui/article-type/base-article.vue";
   import type { TItem } from "~/feed/types";
 
   defineProps<{

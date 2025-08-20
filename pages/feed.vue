@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import FeedSkeleton from "~/components/feed/feed-type/feed-skeleton.vue";
-  import TabsList from "~/components/feed/tabs-list.vue";
-  import ViewSwitchSkeleton from "~/components/feed/view-switch-skeleton.vue";
-  import ViewSwitch from "~/components/feed/view-switch.vue";
+  import FeedSkeleton from "~/feed/ui/feed-type/feed-skeleton.vue";
+  import TabsList from "~/feed/ui/tabs-list.vue";
+  import ViewSwitchSkeleton from "~/feed/ui/view-switch-skeleton.vue";
+  import ViewSwitch from "~/feed/ui/view-switch.vue";
   import IconLoupe from "~/components/icons/icon-loupe.vue";
   import PaginationSkeleton from "~/components/ui/pagination/pagination-skeleton.vue";
   import UiPagination from "~/components/ui/pagination/ui-pagination.vue";

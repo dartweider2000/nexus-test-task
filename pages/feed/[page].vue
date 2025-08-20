@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import ImageArticle from "~/components/feed/article-type/image-article.vue";
-  import TextArticle from "~/components/feed/article-type/text-article.vue";
-  import FeedList from "~/components/feed/feed-type/feed-list.vue";
-  import FeedCell from "~/components/feed/feed-type/feed-cell.vue";
+  import ImageArticle from "~/feed/ui/article-type/image-article.vue";
+  import TextArticle from "~/feed/ui/article-type/text-article.vue";
+  import FeedList from "~/feed/ui/feed-type/feed-list.vue";
+  import FeedCell from "~/feed/ui/feed-type/feed-cell.vue";
   import type { TItem } from "~/feed/types";
 
   defineProps<{
