@@ -8,7 +8,11 @@
   import UiPagination from "~/components/ui/pagination/ui-pagination.vue";
   import UiInput from "~/components/ui/ui-input.vue";
   import UiRefresh from "~/components/ui/ui-refresh.vue";
-  import { tabs } from "~/feed/config";
+  import {
+    refreshDebounceDuration,
+    searchDebounceDuration,
+    tabs,
+  } from "~/feed/config";
   import FeedApi from "~/feed/FeedApi";
   import type {
     TFeedKey,
@@ -33,7 +37,7 @@
   const search = ref<string>(q.value);
   const updateQ = debounce(() => {
     search.value = q.value;
-  }, 400);
+  }, searchDebounceDuration);
   watch(q, updateQ);
 
   // При вереходе между лентами и когда изменяем значение в поиске, то сбрасываем страницу
@@ -73,7 +77,7 @@
   );
 
   // Debounce для того, чтобы если из 2-х мест вызвался запрос, то выполнился последний с более актуальными данными
-  const debouncedRefresh = debounce(refresh, 50);
+  const debouncedRefresh = debounce(refresh, refreshDebounceDuration);
 
   // Проверка на то не выходил ли значение page за пределы totalPages
   watch(page, (value) => {

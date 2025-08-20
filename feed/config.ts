@@ -31,6 +31,8 @@ export const tabs = feedTabsList.map(({ mark, name }) => ({
 
 export const feedPageSize = 4;
 export const serverCacheExpiredDelta = 10_000;
+export const searchDebounceDuration = 400;
+export const refreshDebounceDuration = 50;
 
 export const feedView = {
   list: 1,
