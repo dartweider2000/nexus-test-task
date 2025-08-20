@@ -37,42 +37,25 @@ export const useUrlParams = () => {
     },
   });
 
-  // const subscribers: (() => Promise<void> | void)[] = [];
-  // const subscribeUrlUpdate = (callback: () => Promise<void> | void) => {
-  //   subscribers.push(callback);
-  // };
-  // const notify = () => {
-  //   subscribers.forEach((callback) => callback());
-  // };
-
   watch(
     () => router.currentRoute.value,
     ({ query, params }) => {
       const { page } = params;
       const { tab, q } = query;
 
-      let changed = false;
-
       if (/^\d+$/.test(page.toString()) && +page > 0 && +page !== _page.value) {
         _page.value = +page;
-        changed = true;
       }
 
       if (isFeedKey(tab) && tab !== _tab.value) {
         _tab.value = tab;
-        changed = true;
       }
 
       if (q !== _q.value) {
         _q.value = q?.toString() || "";
-        changed = true;
       }
 
-      if (changed) {
-        setParams(_page.value, _q.value, _tab.value);
-      }
-
-      // notify();
+      setParams(_page.value, _q.value, _tab.value);
     },
     { immediate: true }
   );
@@ -81,6 +64,5 @@ export const useUrlParams = () => {
     q,
     page,
     tab,
-    // subscribeUrlUpdate,
   };
 };

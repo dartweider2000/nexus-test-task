@@ -72,8 +72,8 @@
     }
   );
 
+  // Debounce для того, чтобы если из 2-х мест вызвался запрос, то выполнился последний с более актуальными данными
   const debouncedRefresh = debounce(refresh, 50);
-  // subscribeUrlUpdate(debouncedRefresh);
 
   // Проверка на то не выходил ли значение page за пределы totalPages
   watch(page, (value) => {
@@ -252,7 +252,7 @@
     }
   }
   .bottom-header {
-    @apply py-[20px] grid grid-flow-col justify-between items-center;
+    @apply py-[20px] grid grid-flow-col gap-[10px] justify-between items-center;
 
     @media (min-width: 769px) {
       @apply py-[25px];
