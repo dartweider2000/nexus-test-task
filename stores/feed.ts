@@ -17,15 +17,10 @@ export const useFeedStore = defineStore("feedStore", () => {
   };
 
   const view = ref<TView>("list");
-  watch(view, (newView) => {
-    saveView(newView);
-  });
 
-  onMounted(() => {
-    // После гидратации беру значение из localStorage
-    view.value = getView();
-  });
   return {
     view,
+    saveView,
+    getView,
   };
 });

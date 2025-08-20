@@ -18,7 +18,9 @@
   import { useUrlParams } from "~/feed/useUrlParams";
   import { debounce } from "~/helpers/debounce";
 
-  const { view } = storeToRefs(useFeedStore());
+  const feedStore = useFeedStore();
+  const { view } = storeToRefs(feedStore);
+  const { saveView, getView } = feedStore;
 
   const { page, q, tab } = useUrlParams();
   const changePageHandler = (_page: number) => {
@@ -90,6 +92,15 @@
     shouldLoadNewItems = true;
     debouncedRefresh();
   };
+
+  watch(view, (newView) => {
+    saveView(newView);
+  });
+
+  onMounted(() => {
+    // После гидратации беру значение из localStorage
+    view.value = getView();
+  });
 </script>
 
 <template>
