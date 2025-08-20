@@ -31,7 +31,6 @@
   const search = ref<string>(q.value);
   const updateQ = debounce(() => {
     search.value = q.value;
-    // debouncedRefresh();
   }, 400);
   watch(q, updateQ);
 
@@ -48,6 +47,7 @@
     data: response,
     pending,
     refresh,
+    error,
   } = await useAsyncData<TPaginationBackendResponse>(
     async () => {
       const params: TPaginationParams = {
@@ -88,6 +88,7 @@
     tab.value = "all";
     search.value = "";
     shouldLoadNewItems = true;
+    debouncedRefresh();
   };
 </script>
 
@@ -134,7 +135,8 @@
           <client-only>
             <template #default>
               <feed-skeleton v-if="pending || !response" />
-              <nuxt-page v-else :items="response.items" />
+              <nuxt-page v-else-if="!error" :items="response.items" />
+              <div v-else class="page__nested-error">Произошла ошибка</div>
             </template>
             <template #fallback>
               <feed-skeleton />
@@ -148,7 +150,7 @@
         <div class="page__pagination-inner">
           <pagination-skeleton v-if="pending || !response" />
           <ui-pagination
-            v-else
+            v-else-if="!error && response.totalPages"
             :total="response.totalPages"
             :current="page"
             @change="changePageHandler"
@@ -180,6 +182,11 @@
     }
     // .page__nested
     &__nested {
+      @apply grid h-full;
+    }
+    // .page__nested-error
+    &__nested-error {
+      @apply self-center justify-self-center text-[18px];
     }
     // .page__loader
     &__loader {
@@ -194,7 +201,7 @@
     }
   }
   .container {
-    @apply max-w-[--container-width] px-[--container-padding-x] m-auto;
+    @apply max-w-[--container-width] px-[--container-padding-x] m-auto h-full;
   }
   .top-header {
     @apply grid gap-[20px] items-center;

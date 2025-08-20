@@ -18,7 +18,7 @@
 
 <template>
   <div class="inner-page">
-    <component :is="list">
+    <component v-if="items.length" :is="list">
       <component
         :is="item"
         v-for="article in items"
@@ -26,7 +26,16 @@
         :article="article"
       />
     </component>
+    <div v-else class="inner-page__empty">Нет новостей</div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .inner-page {
+    @apply grid h-full;
+    // .inner-page__empty
+    &__empty {
+      @apply justify-self-center self-center text-center font-semibold text-[18px];
+    }
+  }
+</style>
